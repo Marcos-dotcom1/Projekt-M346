@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 # Init-Script für M346 FaceRecognition-Service
-# Erstellt S3-Buckets, deployt die C#-Lambda-Funktion und richtet den S3-Trigger ein.
+# Erstellt S3-Buckets, deployt die C#-Lambda-Funktion und richtet S3-Trigger ein.
 
 set -euo pipefail
 
 ############################
-# Konfiguration anpassen
+# Konfiguration
 ############################
 
 AWS_REGION="us-east-1"
 
-# Bucket-Namen (existieren bei dir bereits so)
+# Eindeutige Bucket-Namen (empfohlen!)
 IN_BUCKET="m346-face-in-$(whoami)"
 OUT_BUCKET="m346-face-out-$(whoami)"
 
-# Lambda / Rolle / Projektpfad
+# >>> WICHTIG: KORRIGIERTER PFAD ZUR LAMBDA <<<
+PROJECT_DIR="$HOME/Projekt-M346/Lambda/FaceRecognitionLambda/src/FaceRecognitionLambda"
+
 FUNCTION_NAME="face-recognition-lambda"
 LAMBDA_ROLE="LabRole"
-PROJECT_DIR="$HOME/FaceRecognitionLambda/src/FaceRecognitionLambda"
 
 ############################
 # Hilfsfunktionen
@@ -33,7 +34,7 @@ bucket_exists() {
 }
 
 ############################
-# 1. Buckets erstellen (falls noch nicht vorhanden)
+# 1. Buckets erstellen
 ############################
 
 echo "==> Prüfe / erstelle S3-Buckets ..."
@@ -53,10 +54,18 @@ else
 fi
 
 ############################
-# 2. Lambda-Funktion deployen / updaten
+# 2. Lambda-Funktion deployen
 ############################
 
 echo "==> Deploye Lambda-Funktion '$FUNCTION_NAME' ..."
+
+# >>> WICHTIG: Sicherstellen, dass der Pfad existiert
+if [[ ! -d "$PROJECT_DIR" ]]; then
+  echo "FEHLER: Projektpfad existiert nicht:"
+  echo "  $PROJECT_DIR"
+  echo "Bitte überprüfe die Projektstruktur!"
+  exit 1
+fi
 
 cd "$PROJECT_DIR"
 
@@ -81,10 +90,10 @@ LAMBDA_ARN=$(aws lambda get-function \
 echo "Lambda-ARN: $LAMBDA_ARN"
 
 ############################
-# 4. Lambda-Berechtigung für S3 setzen
+# 4. Permission für S3 setzen
 ############################
 
-echo "==> Füge Berechtigung hinzu, damit S3 die Lambda aufrufen darf ..."
+echo "==> Setze Berechtigung für S3 → Lambda ..."
 
 STATEMENT_ID="s3invoke-$(date +%s)"
 
@@ -97,13 +106,13 @@ aws lambda add-permission \
   --source-arn "arn:aws:s3:::$IN_BUCKET" \
   >/dev/null
 
-echo "Berechtigung hinzugefügt (StatementId=$STATEMENT_ID)."
+echo "Berechtigung gesetzt."
 
 ############################
-# 5. S3-Bucket-Notification konfigurieren (Trigger)
+# 5. S3 Trigger konfigurieren
 ############################
 
-echo "==> Richte S3-Trigger ein (ObjectCreated -> Lambda) ..."
+echo "==> Richte S3-Trigger ein ..."
 
 NOTIFICATION_CONFIG=$(cat <<EOF
 {
@@ -122,7 +131,7 @@ aws s3api put-bucket-notification-configuration \
   --notification-configuration "$NOTIFICATION_CONFIG"
 
 ############################
-# 6. Zusammenfassung ausgeben
+# 6. Zusammenfassung
 ############################
 
 echo
@@ -133,4 +142,5 @@ echo " In-Bucket:      $IN_BUCKET"
 echo " Out-Bucket:     $OUT_BUCKET"
 echo " Lambda-Name:    $FUNCTION_NAME"
 echo " Lambda-ARN:     $LAMBDA_ARN"
+echo " Projektpfad:    $PROJECT_DIR"
 echo "========================================"
