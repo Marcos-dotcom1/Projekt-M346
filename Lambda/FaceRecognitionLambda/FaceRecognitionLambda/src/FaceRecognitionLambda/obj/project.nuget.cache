@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "dgSpecHash": "9ebqvQCeNRM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\IIacovelli\\Documents\\GitHub\\Projekt-M346\\Lambda\\FaceRecognitionLambda\\FaceRecognitionLambda\\src\\FaceRecognitionLambda\\FaceRecognitionLambda.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\amazon.lambda.core\\2.2.0\\amazon.lambda.core.2.2.0.nupkg.sha512",
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\amazon.lambda.s3events\\3.0.0\\amazon.lambda.s3events.3.0.0.nupkg.sha512",
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\amazon.lambda.serialization.systemtextjson\\2.4.0\\amazon.lambda.serialization.systemtextjson.2.4.0.nupkg.sha512",
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\awssdk.core\\3.7.302.19\\awssdk.core.3.7.302.19.nupkg.sha512",
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\awssdk.rekognition\\3.7.300.4\\awssdk.rekognition.3.7.300.4.nupkg.sha512",
+    "C:\\Users\\IIacovelli\\.nuget\\packages\\awssdk.s3\\3.7.306.2\\awssdk.s3.3.7.306.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "FaceRecognitionLambda depends on Amazon.Lambda.S3Events (>= 2.2.0) but Amazon.Lambda.S3Events 2.2.0 was not found. Amazon.Lambda.S3Events 3.0.0 was resolved instead.",
+      "projectPath": "C:\\Users\\IIacovelli\\Documents\\GitHub\\Projekt-M346\\Lambda\\FaceRecognitionLambda\\FaceRecognitionLambda\\src\\FaceRecognitionLambda\\FaceRecognitionLambda.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\IIacovelli\\Documents\\GitHub\\Projekt-M346\\Lambda\\FaceRecognitionLambda\\FaceRecognitionLambda\\src\\FaceRecognitionLambda\\FaceRecognitionLambda.csproj",
+      "libraryId": "Amazon.Lambda.S3Events",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

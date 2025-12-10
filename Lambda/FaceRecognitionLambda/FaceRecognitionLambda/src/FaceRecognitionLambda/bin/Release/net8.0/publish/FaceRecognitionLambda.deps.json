@@ -1,0 +1,130 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0/linux-x64",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {},
+    ".NETCoreApp,Version=v8.0/linux-x64": {
+      "FaceRecognitionLambda/1.0.0": {
+        "dependencies": {
+          "AWSSDK.Rekognition": "3.7.300.4",
+          "AWSSDK.S3": "3.7.306.2",
+          "Amazon.Lambda.Core": "2.2.0",
+          "Amazon.Lambda.S3Events": "3.0.0",
+          "Amazon.Lambda.Serialization.SystemTextJson": "2.4.0"
+        },
+        "runtime": {
+          "FaceRecognitionLambda.dll": {}
+        }
+      },
+      "Amazon.Lambda.Core/2.2.0": {
+        "runtime": {
+          "lib/net8.0/Amazon.Lambda.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Amazon.Lambda.S3Events/3.0.0": {
+        "runtime": {
+          "lib/netcoreapp3.1/Amazon.Lambda.S3Events.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Amazon.Lambda.Serialization.SystemTextJson/2.4.0": {
+        "dependencies": {
+          "Amazon.Lambda.Core": "2.2.0"
+        },
+        "runtime": {
+          "lib/net8.0/Amazon.Lambda.Serialization.SystemTextJson.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "AWSSDK.Core/3.7.302.19": {
+        "runtime": {
+          "lib/net8.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.302.19"
+          }
+        }
+      },
+      "AWSSDK.Rekognition/3.7.300.4": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.302.19"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.Rekognition.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.300.4"
+          }
+        }
+      },
+      "AWSSDK.S3/3.7.306.2": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.302.19"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.306.2"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FaceRecognitionLambda/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Amazon.Lambda.Core/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DHqKeD1CYocP0t1dJC/NaXfu+5k6AoqnQ1Hlu/J2mXpLpCyeJfY+tIqT5fpruDarUlU0NtdIH8zSkCjeinyb1A==",
+      "path": "amazon.lambda.core/2.2.0",
+      "hashPath": "amazon.lambda.core.2.2.0.nupkg.sha512"
+    },
+    "Amazon.Lambda.S3Events/3.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fuBVzMnTx6sdcFrF6wDD4wyR5Dy/YN6+bX8QHVE/4hil2si7Y/MQkGXDDPUbH/sAjtZLZ0T6h7DS6guZ1kK0qg==",
+      "path": "amazon.lambda.s3events/3.0.0",
+      "hashPath": "amazon.lambda.s3events.3.0.0.nupkg.sha512"
+    },
+    "Amazon.Lambda.Serialization.SystemTextJson/2.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VwHKBvAD3ivAoAYjRNy/LsZaoFayKAWhVYOTYur5UQZzxYCC6itTwBH5skt3l8FCIjOAGnZljHNnayu17Y53jw==",
+      "path": "amazon.lambda.serialization.systemtextjson/2.4.0",
+      "hashPath": "amazon.lambda.serialization.systemtextjson.2.4.0.nupkg.sha512"
+    },
+    "AWSSDK.Core/3.7.302.19": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-z4AdekJbJcegl0gt/K3QBikQw7pnfsFI6Rfev/zn/EHMFukdERneJNTGdGxZujfg1u5d43Mb6wr3wEAtYHq5WA==",
+      "path": "awssdk.core/3.7.302.19",
+      "hashPath": "awssdk.core.3.7.302.19.nupkg.sha512"
+    },
+    "AWSSDK.Rekognition/3.7.300.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-umfG6cgAZnAID3HPytj0CgO6Aja+TXIsGTqbEiMyEpBCY+W+CkcitY7y3PC+tK+iWHerYRpwQSl3mLO3F9SbhA==",
+      "path": "awssdk.rekognition/3.7.300.4",
+      "hashPath": "awssdk.rekognition.3.7.300.4.nupkg.sha512"
+    },
+    "AWSSDK.S3/3.7.306.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-N68jszRe7IMkYdTXWr9d/Cy+mJikZsv8fXMwx51cpePgJzE+pxyxlYW74yHSy8VPXA/BcKnYcfzLHqN1c2C6jA==",
+      "path": "awssdk.s3/3.7.306.2",
+      "hashPath": "awssdk.s3.3.7.306.2.nupkg.sha512"
+    }
+  }
+}

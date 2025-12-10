@@ -1,0 +1,10 @@
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/FaceRecognitionLambda.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/FaceRecognitionLambda.deps.json
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/FaceRecognitionLambda.runtimeconfig.json
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/FaceRecognitionLambda.pdb
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/Amazon.Lambda.Core.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/Amazon.Lambda.S3Events.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/Amazon.Lambda.Serialization.SystemTextJson.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/AWSSDK.Core.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/AWSSDK.Rekognition.dll
+/home/ubuntu/FaceRecognitionLambda/src/FaceRecognitionLambda/bin/Release/net8.0/publish/AWSSDK.S3.dll

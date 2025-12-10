@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Wichtig für AWS Lambda -->
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- AWS Lambda Support -->
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.0" />
+
+    <!-- S3-Events für Lambda-Trigger -->
+    <PackageReference Include="Amazon.Lambda.S3Events" Version="2.2.0" />
+
+    <!-- AWS SDKs für Rekognition und S3 -->
+    <PackageReference Include="AWSSDK.Rekognition" Version="3.7.300.4" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.306.2" />
+  </ItemGroup>
+
+</Project>

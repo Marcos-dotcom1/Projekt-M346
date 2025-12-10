@@ -1,136 +1,136 @@
 #!/usr/bin/env bash
 # Init-Script für M346 FaceRecognition-Service
 # Erstellt S3-Buckets, deployt die C#-Lambda-Funktion und richtet den S3-Trigger ein.
- 
+
 set -euo pipefail
- 
+
 ############################
 # Konfiguration anpassen
 ############################
- 
+
 AWS_REGION="us-east-1"
- 
+
 # Bucket-Namen (existieren bei dir bereits so)
 IN_BUCKET="m346-face-in-bucket"
 OUT_BUCKET="m346-face-out-bucket"
- 
+
 # Lambda / Rolle / Projektpfad
 FUNCTION_NAME="face-recognition-lambda"
 LAMBDA_ROLE="LabRole"
 PROJECT_DIR="$HOME/FaceRecognitionLambda/src/FaceRecognitionLambda"
- 
+
 ############################
 # Hilfsfunktionen
 ############################
- 
+
 bucket_exists() {
- local bucket_name="$1"
- if aws s3 ls "s3://$bucket_name" --region "$AWS_REGION" >/dev/null 2>&1; then
-   return 0
- else
-   return 1
- fi
+  local bucket_name="$1"
+  if aws s3 ls "s3://$bucket_name" --region "$AWS_REGION" >/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
 }
- 
+
 ############################
 # 1. Buckets erstellen (falls noch nicht vorhanden)
 ############################
- 
+
 echo "==> Prüfe / erstelle S3-Buckets ..."
- 
+
 if bucket_exists "$IN_BUCKET"; then
- echo "In-Bucket '$IN_BUCKET' existiert bereits."
+  echo "In-Bucket '$IN_BUCKET' existiert bereits."
 else
- echo "Erstelle In-Bucket '$IN_BUCKET' ..."
- aws s3 mb "s3://$IN_BUCKET" --region "$AWS_REGION"
+  echo "Erstelle In-Bucket '$IN_BUCKET' ..."
+  aws s3 mb "s3://$IN_BUCKET" --region "$AWS_REGION"
 fi
- 
+
 if bucket_exists "$OUT_BUCKET"; then
- echo "Out-Bucket '$OUT_BUCKET' existiert bereits."
+  echo "Out-Bucket '$OUT_BUCKET' existiert bereits."
 else
- echo "Erstelle Out-Bucket '$OUT_BUCKET' ..."
- aws s3 mb "s3://$OUT_BUCKET" --region "$AWS_REGION"
+  echo "Erstelle Out-Bucket '$OUT_BUCKET' ..."
+  aws s3 mb "s3://$OUT_BUCKET" --region "$AWS_REGION"
 fi
- 
+
 ############################
 # 2. Lambda-Funktion deployen / updaten
 ############################
- 
+
 echo "==> Deploye Lambda-Funktion '$FUNCTION_NAME' ..."
- 
+
 cd "$PROJECT_DIR"
- 
+
 dotnet lambda deploy-function \
-"$FUNCTION_NAME" \
- --function-role "$LAMBDA_ROLE" \
- --region "$AWS_REGION" \
---environment-variables "OUTPUT_BUCKET=$OUT_BUCKET"
- 
+  "$FUNCTION_NAME" \
+  --function-role "$LAMBDA_ROLE" \
+  --region "$AWS_REGION" \
+  --environment-variables "OUTPUT_BUCKET=$OUT_BUCKET"
+
 ############################
 # 3. Lambda-ARN holen
 ############################
- 
+
 echo "==> Lese Lambda-ARN ..."
- 
+
 LAMBDA_ARN=$(aws lambda get-function \
- --function-name "$FUNCTION_NAME" \
- --region "$AWS_REGION" \
- --query 'Configuration.FunctionArn' \
- --output text)
- 
+  --function-name "$FUNCTION_NAME" \
+  --region "$AWS_REGION" \
+  --query 'Configuration.FunctionArn' \
+  --output text)
+
 echo "Lambda-ARN: $LAMBDA_ARN"
- 
+
 ############################
 # 4. Lambda-Berechtigung für S3 setzen
 ############################
- 
+
 echo "==> Füge Berechtigung hinzu, damit S3 die Lambda aufrufen darf ..."
- 
+
 STATEMENT_ID="s3invoke-$(date +%s)"
- 
+
 aws lambda add-permission \
- --function-name "$FUNCTION_NAME" \
- --region "$AWS_REGION" \
- --statement-id "$STATEMENT_ID" \
- --action lambda:InvokeFunction \
- --principal s3.amazonaws.com \
- --source-arn "arn:aws:s3:::$IN_BUCKET" \
- >/dev/null
- 
+  --function-name "$FUNCTION_NAME" \
+  --region "$AWS_REGION" \
+  --statement-id "$STATEMENT_ID" \
+  --action lambda:InvokeFunction \
+  --principal s3.amazonaws.com \
+  --source-arn "arn:aws:s3:::$IN_BUCKET" \
+  >/dev/null
+
 echo "Berechtigung hinzugefügt (StatementId=$STATEMENT_ID)."
- 
+
 ############################
 # 5. S3-Bucket-Notification konfigurieren (Trigger)
 ############################
- 
+
 echo "==> Richte S3-Trigger ein (ObjectCreated -> Lambda) ..."
- 
+
 NOTIFICATION_CONFIG=$(cat <<EOF
 {
-"LambdaFunctionConfigurations": [
-   {
-    "LambdaFunctionArn": "$LAMBDA_ARN",
-    "Events": ["s3:ObjectCreated:*"]
-   }
- ]
+  "LambdaFunctionConfigurations": [
+    {
+      "LambdaFunctionArn": "$LAMBDA_ARN",
+      "Events": ["s3:ObjectCreated:*"]
+    }
+  ]
 }
 EOF
 )
- 
+
 aws s3api put-bucket-notification-configuration \
- --bucket "$IN_BUCKET" \
---notification-configuration "$NOTIFICATION_CONFIG"
- 
+  --bucket "$IN_BUCKET" \
+  --notification-configuration "$NOTIFICATION_CONFIG"
+
 ############################
 # 6. Zusammenfassung ausgeben
 ############################
- 
+
 echo
 echo "========================================"
 echo " Init abgeschlossen!"
-echo " Region:        $AWS_REGION"
-echo " In-Bucket:     $IN_BUCKET"
-echo " Out-Bucket:    $OUT_BUCKET"
-echo " Lambda-Name:   $FUNCTION_NAME"
-echo " Lambda-ARN:    $LAMBDA_ARN"
+echo " Region:         $AWS_REGION"
+echo " In-Bucket:      $IN_BUCKET"
+echo " Out-Bucket:     $OUT_BUCKET"
+echo " Lambda-Name:    $FUNCTION_NAME"
+echo " Lambda-ARN:     $LAMBDA_ARN"
 echo "========================================"

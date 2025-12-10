@@ -1,0 +1,47 @@
+# --- Dotnet build artifacts ---
+bin/
+obj/
+publish/
+*.dll
+*.exe
+*.pdb
+*.runtimeconfig.json
+*.deps.json
+*.nuget.cache
+project.assets.json
+
+# --- AWS Lambda Deployment Artifacts ---
+*.zip
+.aws-sam/
+.aws/
+.lambda-tools/
+
+# --- Logs / Results (nicht versionieren) ---
+results/
+*.json
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Test Coverage ---
+coverage/
+*.coverage
+*.coveragexml
+
+# --- Temporary Files ---
+*.tmp
+*.temp
+~*
+
+# --- ReSharper / Rider ---
+.idea/
+*.user
+*.sln.iml
+
+# --- Git keeps allowed ---
+!**/.gitkeep

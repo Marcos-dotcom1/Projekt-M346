@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lambda", "Lambda", "{7459E685-8883-CB08-9F0F-A142470721FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FaceRecognitionLambda", "FaceRecognitionLambda", "{6BD25977-D4F4-0CF0-B7F9-6B815461E51A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FaceRecognitionLambda", "FaceRecognitionLambda", "{0A39B87F-DE3C-84E6-DAD3-07D82CCDF0B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EA079041-AA9A-F03C-85F9-F494A331BABC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceRecognitionLambda", "Lambda\FaceRecognitionLambda\FaceRecognitionLambda\src\FaceRecognitionLambda\FaceRecognitionLambda.csproj", "{E72310FD-E403-EA34-C414-9AC66B070737}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{577D3734-0841-1CE5-73EE-6A3F8F9A77B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceRecognitionLambda.Tests", "Lambda\FaceRecognitionLambda\FaceRecognitionLambda\test\FaceRecognitionLambda.Tests\FaceRecognitionLambda.Tests.csproj", "{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E72310FD-E403-EA34-C414-9AC66B070737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E72310FD-E403-EA34-C414-9AC66B070737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E72310FD-E403-EA34-C414-9AC66B070737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E72310FD-E403-EA34-C414-9AC66B070737}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6BD25977-D4F4-0CF0-B7F9-6B815461E51A} = {7459E685-8883-CB08-9F0F-A142470721FC}
+		{0A39B87F-DE3C-84E6-DAD3-07D82CCDF0B1} = {6BD25977-D4F4-0CF0-B7F9-6B815461E51A}
+		{EA079041-AA9A-F03C-85F9-F494A331BABC} = {0A39B87F-DE3C-84E6-DAD3-07D82CCDF0B1}
+		{E72310FD-E403-EA34-C414-9AC66B070737} = {EA079041-AA9A-F03C-85F9-F494A331BABC}
+		{577D3734-0841-1CE5-73EE-6A3F8F9A77B2} = {0A39B87F-DE3C-84E6-DAD3-07D82CCDF0B1}
+		{727B3A0C-3238-6FD0-ABEC-2AE489AB95C9} = {577D3734-0841-1CE5-73EE-6A3F8F9A77B2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FA8B806-0928-4006-9350-847F80A5C71C}
+	EndGlobalSection
+EndGlobal
