@@ -15,7 +15,7 @@ IN_BUCKET="m346-face-in-$(whoami)"
 OUT_BUCKET="m346-face-out-$(whoami)"
 
 # PFAD ZUR LAMBDA 
-PROJECT_DIR="$HOME\Projekt-M346\Lambda\FaceRecognitionLambda\FaceRecognitionLambda\src\FaceRecognitionLambda\Function.cs"
+PROJECT_DIR="$HOME/Projekt-M346/Lambda/FaceRecognitionLambda/FaceRecognitionLambda/src/FaceRecognitionLambda"
 
 FUNCTION_NAME="face-recognition-lambda"
 LAMBDA_ROLE="LabRole"
