@@ -14,7 +14,7 @@ AWS_REGION="us-east-1"
 IN_BUCKET="m346-face-in-$(whoami)"
 OUT_BUCKET="m346-face-out-$(whoami)"
 
-# >>> WICHTIG: KORRIGIERTER PFAD ZUR LAMBDA <<<
+# PFAD ZUR LAMBDA 
 PROJECT_DIR="$HOME/Projekt-M346/Lambda/FaceRecognitionLambda/src/FaceRecognitionLambda"
 
 FUNCTION_NAME="face-recognition-lambda"
