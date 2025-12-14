@@ -84,7 +84,7 @@ echo "==> Lambda ARN: $LAMBDA_ARN"
 
 # === Permission für S3 → Lambda (idempotent: Fehler ignorieren wenn schon vorhanden) ===
 echo "==> Setze Permission S3 → Lambda ..."
-STATEMENT_ID="s3invoke"
+STATEMENT_ID="s3invoke-$(echo -n "$IN_BUCKET" | tr -cd 'a-zA-Z0-9' | tail -c 32)"
 aws lambda add-permission \
   --function-name "$FUNCTION_NAME" \
   --region "$AWS_REGION" \
