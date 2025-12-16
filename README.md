@@ -1,250 +1,244 @@
+# Projekt M346 – Face Recognition Service (AWS Lambda)
+
+## Übersicht
+
+Dieses Projekt implementiert einen **serverlosen Face-Recognition-Service** auf Basis von **AWS Lambda**, **Amazon S3** und **Amazon Rekognition**.
+
+Ein Bild (JPG/JPEG) wird in einen S3-Input-Bucket hochgeladen. Dadurch wird automatisch eine **C#-Lambda-Funktion** ausgelöst, welche das Bild mit **Amazon Rekognition** analysiert. Das Analyse-Ergebnis wird anschließend als **JSON-Datei** in einen S3-Output-Bucket geschrieben.
+
+Das Projekt ist so aufgebaut, dass es **auf jedem Linux-System** nach einem `git clone` ausschließlich über die bereitgestellten Skripte **initialisiert und getestet** werden kann.
+
 ---
-# 📄 **README.md – Projekt M346: Face Recognition Service (AWS Lambda, C#)**
 
-## 🧩 **Projektbeschreibung**
+## Architektur
 
-Dieses Projekt implementiert einen cloudbasierten Face-Recognition-Service, der automatisch Personen auf Bildern erkennt.
-Beim Hochladen eines Bildes in einen S3-Bucket wird eine C#-AWS-Lambda-Funktion ausgelöst, die das Bild mittels **Amazon Rekognition** analysiert und die erkannten Personen als **JSON-Datei** in einem separaten Output-Bucket speichert.
+1. Upload eines Bildes (`.jpg` / `.jpeg`) in den **Input-S3-Bucket**
+2. S3-Event (`ObjectCreated`) triggert die Lambda-Funktion
+3. Lambda analysiert das Bild mit **Amazon Rekognition (Celebrity Recognition)**
+4. Ergebnis wird als JSON in den **Output-S3-Bucket** geschrieben
+5. Das Test-Skript lädt das JSON lokal herunter
 
-Die gesamte Infrastruktur wird über ein **Init-Skript automatisch erstellt**, und ein End-to-End-Test lässt sich über ein **Testskript** durchführen.
 ---
 
-# 📦 **Projektstruktur**
+## Voraussetzungen
 
+### Lokales System (Linux)
+
+- Linux (getestet mit Ubuntu)
+- Bash
+- Internetzugang
+
+### Benötigte Software
+
+- **AWS CLI v2**
+- **.NET SDK 8.0**
+- (optional) **jq** für schön formatierte JSON-Ausgabe
+
+### AWS-Voraussetzungen
+
+- AWS Account
+- Konfiguriertes AWS CLI Profil:
+
+```bash
+aws configure
 ```
+
+- IAM-Rolle **LabRole** (oder gleichwertig) mit:
+
+  - AmazonS3FullAccess
+  - AWSLambdaFullAccess
+  - AmazonRekognitionFullAccess
+  - IAM:PassRole
+
+---
+
+## Projektstruktur
+
+```text
 Projekt-M346/
-│
 ├── Lambda/
 │   └── FaceRecognitionLambda/
-│       ├── Function.cs
-│       ├── FaceRecognitionLambda.csproj
-│       └── aws-lambda-tools-defaults.json
-│   └── results/
-│       └── .gitkeep
-│   └── test/
-│       └── FaceRecognitionLamda.Tests/
-│           ├── bin/
-│           ├── obj/
-│           ├── FaceRecognitionLambda.Tests.csproj
-│           └── FunctionTest.cs
+│       └── FaceRecognitionLambda/
+│           └── src/
+│               └── FaceRecognitionLambda/
+│                   ├── Function.cs
+│                   ├── FaceRecognitionLambda.csproj
+│                   ├── aws-lambda-tools-defaults.json
+│                   └── Readme.md
 │
 ├── Scripts/
-│   ├── init.sh        # Automatisches Deployment
-│   └── test.sh        # End-to-End-Test (Bild → JSON)
+│   ├── init.sh        # Initialisierung (AWS, Buckets, Lambda, Trigger)
+│   ├── test.sh        # Testlauf mit Bild-Upload
+│   └── .env           # Wird automatisch von init.sh erzeugt
 │
-├── README.md
-└── Projekt-M346.sln
+├── Tests/
+│   └── Putin.jpg      # Beispiel-Testbild
+│
+├── results/
+│   └── .gitkeep       # Lokale Analyse-Ergebnisse (JSON)
+│
+├── Projekt-M346.sln
+├── README.md          # Diese Datei
+└── .gitignore
 ```
 
 ---
 
-# ⚙️ **Installation & Voraussetzungen**
+## Installation & Initialisierung
 
-### 📌 **Erforderliche Software**
+### 1. Repository klonen
 
-- Ubuntu
-- AWS CLI (konfiguriert mit gültigen Credentials)
-- .NET SDK 8
-- AWS Lambda Tools für .NET:
+```bash
+git clone https://github.com/Marcos-dotcom1/Projekt-M346.git
+cd Projekt-M346
+```
 
-  ```bash
-  dotnet tool install -g Amazon.Lambda.Tools
-  ```
-
-- Git
-
-### 📌 AWS-Berechtigungen
-
-Der IAM-User benötigt mind.:
-
-- S3 Full Access (für Projekt-Buckets)
-- Lambda Full Access
-- Rekognition Read Access
-- IAM PassRole für Lambda
-
----
-
-# 🚀 **Inbetriebnahme (A1)**
-
-Die gesamte Infrastruktur wird automatisch aufgebaut:
+### 2. Skripte ausführbar machen
 
 ```bash
 cd Scripts
-chmod +x init.sh
+chmod +x init.sh test.sh
+```
+
+### 3. Initialisierung starten
+
+```bash
 ./init.sh
 ```
 
-Das Skript erstellt:
+Dabei passiert automatisch:
 
-- Input-Bucket: `m346-face-in-bucket`
-- Output-Bucket: `m346-face-out-bucket`
-- C#-Lambda: `face-recognition-lambda`
-- S3 → Lambda Trigger
-- Invocation-Permissions
-- Deployment des gepackten Lambda-Codes
+- Prüfung der Voraussetzungen (aws, dotnet)
+- Installation von `Amazon.Lambda.Tools` (falls nicht vorhanden)
+- Erstellen **eindeutiger S3-Buckets** (user- & zeitabhängig)
+- Deployment der Lambda-Funktion
+- Setzen des S3-Triggers
+- Erzeugen der Datei `Scripts/.env`
 
-Nach erfolgreichem Deployment zeigt das Skript:
+Am Ende erscheint eine Zusammenfassung mit:
 
-```
-Init abgeschlossen!
-Region: us-east-1
-In-Bucket: m346-face-in-bucket
-Out-Bucket: m346-face-out-bucket
-Lambda-Name: face-recognition-lambda
-Lambda-ARN: ...
-```
+- AWS Region
+- Input-Bucket
+- Output-Bucket
+- Lambda-Name und ARN
 
 ---
 
-# 🧪 **Testausführung (A4)**
+## Test & Ausführung
 
-Nach Installation kann der Service wie folgt getestet werden:
+### Standard-Test mit Beispielbild
 
 ```bash
-./test.sh ~/Bilder/Putin.jpg
+./test.sh
 ```
 
-Das Skript:
+### Test mit eigenem Bild
 
-1. lädt das Bild in den Input-Bucket,
-2. wartet automatisch, bis Lambda die JSON-Datei erzeugt,
-3. lädt die JSON herunter,
-4. zeigt erkannte Personen an.
-
-Beispielausgabe:
-
+```bash
+./test.sh /pfad/zum/bild.jpg
 ```
-Erkannte Personen:
-- Vladimir Putin
-```
+
+Ablauf:
+
+1. Bild wird in den Input-Bucket hochgeladen
+2. Lambda wird automatisch ausgeführt
+3. Ergebnis-JSON wird im Output-Bucket erstellt
+4. JSON wird lokal nach `results/` heruntergeladen
+
+Falls `jq` installiert ist, werden erkannte Personen direkt im Terminal angezeigt.
 
 ---
 
-# 🧠 **Funktionsweise der Lambda-Funktion (A5)**
+## Ergebnisdateien
 
-- Lambda wird durch **S3-Event** ausgelöst.
-- Der Handler liest:
+Die Analyse-Ergebnisse liegen lokal unter:
 
-  - Bucketname
-  - Dateiname
-
-- Das Bild wird in Rekognition geladen:
-
-  ```csharp
-  var response = await rekognitionClient.RecognizeCelebritiesAsync(request);
-  ```
-
-- Die Analyse (Celebrities, Confidence-Werte) wird in ein JSON-Objekt serialisiert.
-- Das JSON wird in den Output-Bucket geschrieben.
-
----
-
-# 🏗️ **Architekturübersicht (A7)**
-
+```text
+results/<bildname>.json
 ```
-         (1) Upload Bild
-Ubuntu/PC ---------------> S3 Input Bucket
-                                 │
-                                 ▼  (Event Trigger)
-                       AWS Lambda (C#, .NET 8)
-                                 │
-                     Rekognition Analyse
-                                 │
-                                 ▼
-                       S3 Output Bucket
-               -> erstellt JSON mit erkannten Personen
+
+Beispielinhalt:
+
+```json
+{
+  "Celebrities": [
+    {
+      "Name": "Vladimir Putin",
+      "MatchConfidence": 99.8
+    }
+  ]
+}
 ```
 
 ---
 
-# 🔄 **Automatisierung (A1 & A6)**
+## Wichtige Hinweise
 
-### 🌐 `init.sh` automatisiert:
+### S3-Bucket-Namen
 
-- Bucket-Erstellung
-- Lambda-Build
-- Deployment
-- Event Notification
-- IAM Permissions
-- Ausgabe aller ARNs / Bucket-Namen
+- S3-Buckets sind **global eindeutig**
+- `init.sh` erzeugt automatisch eindeutige Namen
+- Die Namen werden in `Scripts/.env` gespeichert
 
-### 🔬 `test.sh` automatisiert:
+### Wiederholtes Ausführen
 
-- Upload eines Testbildes
-- Warten auf Verarbeitung
-- Herunterladen der JSON
-- Anzeigen der Analyseergebnisse
+- `init.sh` kann **mehrfach** ausgeführt werden
+- Bestehende Buckets werden erkannt
+- Lambda wird aktualisiert
 
----
+### Ergebnisse & Git
 
-# 🧪 **Testprotokolle (A4)**
-
-### **Testfall T1 – Celebrity Recognition**
-
-| Feld      | Inhalt                     |
-| --------- | -------------------------- |
-| Eingabe   | Putin.jpg                  |
-| Erwartung | Person soll erkannt werden |
-| Ergebnis  | Vladimir Putin erkannt     |
-| Status    | ✔ bestanden                |
-
-### **Testfall T2 – Alternative Person**
-
-| Eingabe | test.jpeg |
-| Erwartung | Celebrity soll erkannt werden |
-| Ergebnis | Donald Trump erkannt |
-| Status | ✔ bestanden |
+- Ordner `results/` ist **nicht für Git gedacht**
+- Inhalte werden lokal erzeugt
+- Nur `.gitkeep` ist versioniert
 
 ---
 
-# 👥 **Projektprozess (B1–B3)**
+## .gitignore (Auszug)
 
-### ✔ B1 – Planung
+```gitignore
+# Build-Artefakte
+bin/
+obj/
 
-- Architektur früh definiert
-- Ressourcen eingerichtet
-- Ordnerstruktur & Git sauber aufgebaut
+# Ergebnisse
+results/*.json
 
-### ✔ B2 – Vorgehen
+# Environment
+Scripts/.env
 
-- Probleme systematisch gelöst
-- Region-Problem, Trigger-Fehler, IAM-Permissionen behoben
-- Eigenständige Entwicklung & Testing
-
-### ✔ B3 – Reflexion
-
-- Gelernt: IAM, Event-basierte Architekturen, Debugging in AWS
-- Verbesserung: Code früher ins Repo, `.gitignore` früher einrichten
-- Stärken: Automatisierung, klare Struktur, funktionale Umsetzung
-
----
-
-# 📚 **Quellen & Referenzen (C5)**
-
-- AWS Rekognition Docs
-  [https://docs.aws.amazon.com/rekognition/latest/dg/](https://docs.aws.amazon.com/rekognition/latest/dg/)
-- AWS Lambda .NET
-  [https://docs.aws.amazon.com/lambda/latest/dg/csharp-handler.html](https://docs.aws.amazon.com/lambda/latest/dg/csharp-handler.html)
-- AWS S3 Event Notifications
-  [https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html)
-- AWS SDK for .NET
-  [https://github.com/aws/aws-sdk-net](https://github.com/aws/aws-sdk-net)
-- ChatGPT für Unterstützung bei Strukturierung & Kommentierung
+# OS / IDE
+.vscode/
+.idea/
+.DS_Store
+```
 
 ---
 
-# 🏁 **Fazit**
+## Bekannte Fehler & Lösungen
 
-Dieses Projekt erfüllt alle Anforderungen der Aufgabenstellung vollständig:
+### ❌ `dotnet-lambda does not exist`
 
-- Automatisches Deployment
-- Cloudnative Gesichtserkennung mit C#
-- Event-getriebene Architektur
-- Wiederholbare Tests
-- Saubere Dokumentation
-- Professionelle Repository-Struktur
-- Hoher Eigenanteil und technische Kompetenz
+```bash
+dotnet tool install -g Amazon.Lambda.Tools
+export PATH="$PATH:$HOME/.dotnet/tools"
+```
 
-**A1–A7, B1–B3 sowie Dokumentationsblock C sind erfüllt und geben klar die Gütestufe 3.**
+### ❌ `Projektpfad existiert nicht`
+
+- Sicherstellen, dass `init.sh` **aus dem Ordner `Scripts/`** ausgeführt wird
+- Projekt nicht umbenennen oder verschieben
+
+### ❌ Kein Analyse-Ergebnis
+
+- Prüfen, ob das Bild Gesichter enthält
+- CloudWatch Logs der Lambda-Funktion prüfen
+
+---
+
+## Autoren
+
+- Projektarbeit Modul **M346 – Cloud Lösungen konzipieren und realisieren**
+- Repository: [https://github.com/Marcos-dotcom1/Projekt-M346](https://github.com/Marcos-dotcom1/Projekt-M346)
 
 ---

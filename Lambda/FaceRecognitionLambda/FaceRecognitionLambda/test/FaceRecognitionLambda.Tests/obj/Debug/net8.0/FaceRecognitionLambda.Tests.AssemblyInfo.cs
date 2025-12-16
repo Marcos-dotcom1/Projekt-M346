@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FaceRecognitionLambda.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0207d61a93b66b1802c9f0742cb9fbfdd59d0be7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+802177eb6c93dfc816cef2ae562d514037097538")]
 [assembly: System.Reflection.AssemblyProductAttribute("FaceRecognitionLambda.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FaceRecognitionLambda.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
